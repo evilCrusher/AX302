@@ -2,26 +2,26 @@
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload:preload, create:create, update:update});
 var score = 0;
-var life = 0;
+var life = 3;
 
 function preload() {
 	game.load.image('sky', 'assets/sky.png');
 	game.load.image('ground', 'assets/platform.png');
 	game.load.image('star', 'assets/star.png');
-	game.load.spritesheet('dude', 'assets/dude.png');
-	game.load.spritesheet('baddie', 'assets/baddie.png');
+	game.load.spritesheet('dude', 'assets/dude.png',32,48);
+	game.load.spritesheet('baddie', 'assets/baddie.png',32,32);
 }
 
 function create() {
-	game.physics.startSystem(Phaser.Physics.ARC ADE);
+	game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	// Create the sky
 	game.add.sprite(0, 0, 'sky');
 	// Create group of platform
-	platforms =  game.add.physicsGroup();
+	platforms = game.add.physicsGroup();
 	platforms.enableBody = true;
 	// Create the ground
-	var ground = platform.create(0, 550, 'ground');
+	var ground = platforms.create(0, 550, 'ground');
 	ground.scale.setTo(2, 2);
 	ground.body.immovable = true;
 	// Create the ledges
@@ -31,9 +31,9 @@ function create() {
 	ledge.body.immovable = true;
 
 	// set text style
-	var style = {font: "bold 32px Arial", fill: "#fff", boundsAllignH:"center", boundsAllignV: "middle"};
+	var style = {font: "bold 32px Arial", fill: "#fff", boundsAlignH:"center", boundsAlignV: "middle"};
 	// postitioning the score
-	scorelabel = score.add.text(300, 560, "Score: ", style);
+	scorelabel = game.add.text(300, 560, "Score: ", style);
 	scoretext = game.add.text(420, 560, score, style);
 	scorelabel.setShadow(3, 3, 'rgba(0, 0, 0, 0.5)', 2);
 	scoretext.setShadow(3, 3, 'rgba(0, 0, 0, 0.5)', 2);
@@ -51,7 +51,7 @@ function create() {
 	stars.enableBody = true;
 	// We will create 12 stars evenly spaced
 	for(i = 0; i<12; i++){
-		var star = star.create(i * 70, 0, 'star');
+		var star = stars.create(i * 70, 0, 'star');
 		star.body.gravity.y = 200;
 		star.body.bounce.y = 0.7 + Math.random() * 0.2;
 	}
@@ -59,22 +59,22 @@ function create() {
 	// Creating the player sprite
 	player = game.add.sprite(32, 400, 'dude');
 	// Animating the player sprite
-	player.animation.add('left', [0, 1, 2, 3], 10, true);
+	player.animations.add('left', [0, 1, 2, 3], 10, true);
 	// ...add(name of the animation, frames(made in "phaser.min.js", frames per seconds, loop). This line is defining the animation 'left'.
-	player.animation.add('right', [5, 6, 7, 8], 10, true);
+	player.animations.add('right', [5, 6, 7, 8], 10, true);
 	game.physics.arcade.enable(player);
 	player.body.bounce.y = 0.2;
 	player.body.gravity.y = 300;
-	player.body.collide.collideWorldBounce = true;
+	player.body.collide.collideWorldBounds = true;
 	// Create the enemy
 	enemy1 = game.add.sprite(32, 400, 'baddie');
 	// Animating the player sprite
-	enemy1.animation.add('left', [0, 1], 10, true);
-	enemy1.animation.add('right', [2, 3], 10, true);
+	enemy1.animations.add('left', [0, 1], 10, true);
+	enemy1.animations.add('right', [2, 3], 10, true);
 	game.physics.arcade.enable(enemy1);
 	enemy1.body.bounce.y = 0.2;
 	enemy1.body.gravity.y = 500;
-	enemy1.body.collide.collideWorldBounce = true;
+	enemy1.body.collide.collideWorldBounds = true;
 
 	// Create keyboard entries
 	cursors = game.input.keyboard.createCursorsKeys();
@@ -108,12 +108,13 @@ function update() {
 	// Lesson 9:
 	game.physics.arcade.overlap(player, stars, collectStar); //, null, this
 	game.physics.arcade.overlap(player, enemy1, loseLife); //, null, this
-
+/*
 	moveEnemy();
 
 	if (life = 0) {
 		endGame();
 	}
+	*/
 }
 
 
